@@ -1,0 +1,185 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}À propos | BlogSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg,rgb(78, 223, 122) 0%, #2e59d9 100%);
+        color: white;
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 20px 20px;
+    }
+    .feature-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+        height: 100%;
+        padding: 2rem;
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+    }
+    .feature-icon {
+        font-size: 2.5rem;
+        color:rgb(79, 211, 108);
+        margin-bottom: 1.5rem;
+    }
+    .team-member {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .team-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #06d6a0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+    .tech-stack img {
+        height: 60px;
+        margin: 0 15px;
+        transition: all 0.3s;
+    }
+    .tech-stack img:hover {
+        transform: scale(1.1);
+        a {
+            color: #50c774; /* Couleur du lien */
+            text-decoration: none; /* Supprime le soulignement */
+            font-weight: bold; /* Met le lien en gras */
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Section Hero -->
+<section class="about-hero text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInDown">Notre Mission</h1>
+        <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">
+            Fournir une plateforme où les idées s'épanouissent et où les passionnés peuvent échanger, inspirer et se connecter.
+        </p>
+    </div>
+</section>
+
+<!-- Section Présentation -->
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="fw-bold mb-4 text-primary">Bienvenue sur BlogSphere</h2>
+                    <p class="lead">
+                        BlogSphere est bien plus qu'une simple plateforme de blogging. C'est une communauté dynamique où 
+                        les passionnés, les penseurs et les créateurs se rassemblent pour partager leurs connaissances.
+                    </p>
+                    <p>
+                        Fondé en 2023, notre objectif est de démocratiser la publication en ligne tout en maintenant 
+                        des standards élevés de qualité et d'interaction.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Fonctionnalités -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Ce qui nous distingue</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Performance</h3>
+                    <p>
+                        Une plateforme optimisée pour une expérience ultra-rapide, même avec un trafic important.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Communauté</h3>
+                    <p>
+                        Système de commentaires avancé et interactions sociales pour des échanges enrichissants.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Sécurité</h3>
+                    <p>
+                        Protocoles avancés pour protéger vos données et garantir votre vie privée.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Technologie -->
+{% comment %} <section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Notre Stack Technologique</h2>
+        <div class="text-center">
+            <p class="lead">
+                Nous utilisons les dernières technologies pour vous offrir une expérience moderne et fiable.
+            </p>
+        </div>
+    </div>
+</section> {% endcomment %}
+
+<!-- Section Équipe -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Notre Équipe</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'blog/images/jj.jpg' %}" class="team-img" alt="Directeur Technique">
+                    <h4>John NGUEMBU</h4>
+                    <p class="text-muted">Directeur Technique</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'blog/images/team2.jpg' %}" class="team-img" alt="Chef de Produit">
+                    <h4>Marie Martin</h4>
+                    <p class="text-muted">Chef de Produit</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="team-member">
+                    <img src="{% static 'blog/images/team3.jpg' %}" class="team-img" alt="Designer UX">
+                    <h4>Pierre Lambert</h4>
+                    <p class="text-muted">Designer UX</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Prêt à rejoindre notre communauté ?</h2>
+        <a href="{% url 'register' %}" class="btn btn-light btn-lg px-5">
+            S'inscrire maintenant
+        </a>
+    </div>
+</section>
+{% endblock %}

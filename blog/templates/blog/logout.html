@@ -1,0 +1,112 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}Déconnexion réussie | BlogSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .logout-container {
+        min-height: calc(100vh - 160px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url('{% static "blog/images/auth-bg.jpg" %}') no-repeat center center;
+        background-size: cover;
+        position: relative;
+    }
+    .logout-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+    }
+    .logout-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 100%;
+        max-width: 450px;
+        z-index: 1;
+        text-align: center;
+        padding: 2.5rem;
+    }
+    .logout-icon {
+        font-size: 4rem;
+        color: #4e73df;
+        margin-bottom: 1.5rem;
+        animation: bounce 1s infinite alternate;
+    }
+    .logout-title {
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #2e59d9;
+    }
+    .logout-message {
+        color: #5a5c69;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    .logout-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        background: linear-gradient(135deg, #4e73df 0%, #2e59d9 100%);
+        color: white;
+        border: none;
+        transition: all 0.3s;
+        text-decoration: none;
+        margin-top: 1rem;
+    }
+    .logout-btn:hover {
+        background: linear-gradient(135deg, #2e59d9 0%, #1c3ca5 100%);
+        transform: translateY(-2px);
+        color: white;
+        box-shadow: 0 5px 15px rgba(46, 89, 217, 0.3);
+    }
+    .logout-btn i {
+        margin-right: 8px;
+    }
+
+    @keyframes bounce {
+        from { transform: translateY(0); }
+        to { transform: translateY(-10px); }
+    }
+
+    .logout-footer {
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: #858796;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="logout-container animate__animated animate__fadeIn">
+    <div class="logout-card">
+        <div class="logout-icon">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+        <h2 class="logout-title">Déconnexion réussie</h2>
+        <p class="logout-message">
+            Vous avez été déconnecté avec succès de votre compte BlogSphere.
+            Nous espérons vous revoir bientôt !
+        </p>
+        
+        <a href="{% url 'login' %}" class="logout-btn">
+            <i class="fas fa-sign-in-alt"></i> Se reconnecter
+        </a>
+        
+        <div class="logout-footer">
+            <p>Vous souhaitez revenir à l'accueil ? <a href="{% url 'blog-home' %}">Cliquez ici</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

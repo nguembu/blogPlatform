@@ -1,0 +1,25 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if form.instance.pk %}Modifier{% else %}Créer{% endif %} un article{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">{% if form.instance.pk %}Modifier{% else %}Nouveau{% endif %} Post</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="form-group mt-4">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-save"></i> {% if form.instance.pk %}Mettre à jour{% else %}Publier{% endif %}
+                    </button>
+                    <a href="{% if form.instance.pk %}{% url 'post-detail' form.instance.pk %}{% else %}{% url 'blog-home' %}{% endif %}" 
+                       class="btn btn-secondary">
+                        Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

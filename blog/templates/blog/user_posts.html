@@ -1,0 +1,44 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Articles de {{ view.kwargs.username }}{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Articles de {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
+    
+    {% for post in posts %}
+        <article class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ post.author.username }}</strong>
+                        <p class="text-muted">Publié le {{ post.date_posted|date:"d F Y" }}</p>
+                    </div>
+                    <div>
+                        {% if user.is_authenticated %}
+                            {% if user in post.author.followers.all %}
+                                <form method="post" action="{% url 'unfollow' post.author.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-secondary">Se désabonner</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'follow' post.author.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">S'abonner</button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary">S'abonner</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <h2 class="card-title"><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+                <p>{{ post.content|truncatechars:300 }}</p>
+            </div>
+        </article>
+    {% endfor %}
+    
+    {% include 'blog/pagination.html' %}
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'home' %}" class="btn btn-primary">Retour à l'accueil</a>
+    </div>
+{% endblock %}

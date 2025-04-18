@@ -1,0 +1,139 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <article class="card mb-4">
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top post-image" alt="{{ post.title }}">
+        {% endif %}
+        <div class="card-body">
+            <h1 class="card-title">{{ post.title }}</h1>
+            <p class="text-muted">Publié par <a href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a> le {{ post.date_posted|date:"d F Y" }}</p>
+            <div class="card-text">{{ post.content|linebreaks }}</div>
+            
+            <div class="mt-4 d-flex justify-content-between">
+                <div>
+                    <button id="like-btn" class="btn btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                        <i class="far fa-heart"></i> <span id="like-count">{{ post.total_likes }}</span>
+                    </button>
+                </div>
+                <div>
+                    {% if post.author == user %}
+                        <a href="{% url 'post-update' post.id %}" class="btn btn-secondary">Modifier</a>
+                        <a href="{% url 'post-delete' post.id %}" class="btn btn-danger">Supprimer</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <section class="card mb-4">
+        <div class="card-header">
+            <h3>Commentaires ({{ post.comments.count }})</h3>
+        </div>
+        <div class="card-body">
+            {% if user.is_authenticated %}
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    {{ comment_form|crispy }}
+                    <button type="submit" class="btn btn-primary">Poster</button>
+                </form>
+            {% else %}
+                <p class="text-muted">Vous devez être connecté pour commenter. <a href="{% url 'login' %}">Connectez-vous</a> ou <a href="{% url 'register' %}">inscrivez-vous</a>.</p>
+            {% endif %}
+
+            <div class="comments-section">
+                {% for comment in comments %}
+                    <div class="comment mb-3">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ comment.author.username }}</strong>
+                            <small class="text-muted">{{ comment.created_date|timesince }} ago</small>
+                        </div>
+                        <p>{{ comment|safe }}</p>  <!-- Utilisez 'safe' pour rendre le HTML -->
+                        {% if comment.author == user or user.is_superuser %}
+                            <div>
+                                <a href="#" class="text-danger">Supprimer</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if not forloop.last %}<hr>{% endif %}
+                {% empty %}
+                    <p class="text-muted">Aucun commentaire pour le moment. Soyez le premier à commenter!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="card mb-4">
+        <div class="card-header">
+            <h3>Taguer un utilisateur</h3>
+        </div>
+        <div class="card-body">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'tag_user' post.id 0 %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="user">Choisissez un utilisateur à taguer :</label>
+                        <select name="user" class="form-control" required onchange="updateAction(this.value)">
+                            <option value="">-- Sélectionnez un utilisateur --</option>
+                            {% for user in all_users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Taguer</button>
+                </form>
+            {% else %}
+                <p class="text-muted">Vous devez être connecté pour taguer un utilisateur.</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const likeBtn = document.getElementById('like-btn');
+        
+        likeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postId = this.getAttribute('data-post-id');
+            
+            fetch(`/post/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('like-count').textContent = data.likes_count;
+                if (data.liked) {
+                    likeBtn.innerHTML = '<i class="fas fa-heart"></i> <span id="like-count">' + data.likes_count + '</span>';
+                    likeBtn.classList.remove('btn-outline-primary');
+                    likeBtn.classList.add('btn-primary');
+                } else {
+                    likeBtn.innerHTML = '<i class="far fa-heart"></i> <span id="like-count">' + data.likes_count + '</span>';
+                    likeBtn.classList.remove('btn-primary');
+                    likeBtn.classList.add('btn-outline-primary');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+
+    function updateAction(userId) {
+        const form = document.querySelector('form[action*="tag_user"]');
+        if (userId) {
+            form.action = "{% url 'tag_user' post.id 0 %}".replace('0', userId);
+        } else {
+            form.action = "{% url 'tag_user' post.id 0 %}";
+        }
+    }
+</script>
+{% endblock %}
+

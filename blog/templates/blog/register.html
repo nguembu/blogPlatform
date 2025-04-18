@@ -1,0 +1,262 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Inscription | BlogSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: url('{% static "blog/images/auth-bg.jpg" %}') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #118ab2;
+        }
+        .auth-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 500px;
+            z-index: 1;
+        }
+        .auth-header {
+            background: linear-gradient(135deg,#06d6a0 0%, #2e59d9 100%);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .auth-body {
+            padding: 2rem;
+           
+        }
+        
+        .auth-logo {
+            max-width: 100%; /* L'image ne dépassera pas la largeur du conteneur */
+            height: auto;    /* La hauteur sera ajustée proportionnellement */
+            width: 200px;    /* Définit une largeur fixe (ajustez selon vos besoins) */
+        }
+        
+        .auth-title {
+            font-weight: 600;
+            color: rgb(41, 235, 138);
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-color:rgb(78, 223, 102);
+            box-shadow: 0 0 0 0.2rem rgba(62, 179, 87, 0.25);
+            border: 1px solidrgb(70, 75, 112);
+        }
+        .form-control:focus {
+            border-color:rgb(105, 109, 121);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg,#06d6a0 0%,rgb(32, 146, 102) 100%);
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-register:hover {
+            background: linear-gradient(135deg,rgb(55, 189, 115) 0%, #1c3ca5 100%);
+            transform: translateY(-2px);
+        }
+        .auth-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #fee;
+        }
+        .social-auth {
+            margin: 1.5rem 0;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .social-btn:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        .social-btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        .google-btn {
+            background-color: #DB4437;
+        }
+        .facebook-btn {
+            background-color:rgb(75, 133, 248);
+        }
+        .password-requirements {
+            font-size: 0.8rem;
+            color:rgb(78, 87, 84);
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+        a {
+            color: #50c774; /* Couleur du lien */
+            font-weight: bold; /* Met le lien en gras */
+        }
+    </style>
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="auth-card animate__animated animate__fadeIn">
+                    <div class="auth-header">
+                        <img src="{% static 'blog/images/auth.png' %}" alt="BlogSphere" class="auth-logo">
+                        <h2 class="auth-title">Créez votre compte</h2>
+                    </div>
+                    
+                    <div class="auth-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {% comment %} {{ form|crispy }} {% endcomment %}
+                            <!-- Solution générique qui fonctionne avec tout formulaire -->
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="alert alert-danger mt-2">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            
+                            <div class="password-requirements">
+                                <small>
+                                    <i class="fas fa-info-circle"></i> Le mot de passe doit contenir au moins 8 caractères, 
+                                    dont une majuscule, un chiffre et un caractère spécial.
+                                </small>
+                            </div>
+                            
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    J'accepte les <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">conditions d'utilisation</a>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-register mb-3">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </button>
+                            
+                            <div class="social-auth">
+                                <p class="text-center text-muted mb-3">Ou inscrivez-vous avec</p>
+                                <a href="#" class="social-btn google-btn">
+                                    <i class="fab fa-google"></i> Google
+                                </a>
+                                <a href="#" class="social-btn facebook-btn">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </a>
+                            </div>
+                        </form>
+                        
+                        <div class="auth-footer">
+                            <p class="text-muted mb-0">Vous avez déjà un compte ? 
+                                <a href="{% url 'login' %}" class="text-primary">Connectez-vous</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Conditions d'utilisation -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Conditions d'utilisation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Acceptation des Conditions</h6>
+                <p>En accédant ou en utilisant BlogSphere, vous confirmez avoir lu, compris et accepté ces conditions d'utilisation. Si vous n'êtes pas d'accord avec ces conditions, vous ne devez pas utiliser notre service.</p>
+                
+                <h6>2. Création et Gestion de Compte</h6>
+                <p>Vous êtes responsable de la confidentialité de votre compte et de toutes les activités qui y sont associées. Veuillez informer immédiatement BlogSphere de toute utilisation non autorisée de votre compte.</p>
+                
+                <h6>3. Propriété Intellectuelle</h6>
+                <p>Vous conservez tous vos droits de propriété intellectuelle sur le contenu que vous publiez. En soumettant du contenu, vous accordez à BlogSphere une licence mondiale, non exclusive et gratuite pour utiliser ce contenu.</p>
+                
+                <h6>4. Comportement de l'utilisateur</h6>
+                <p>Vous vous engagez à utiliser BlogSphere de manière légale et éthique, en respectant les droits des autres utilisateurs et en évitant tout comportement abusif.</p>
+
+                <h6>5. Modifications des Conditions</h6>
+                <p>BlogSphere se réserve le droit de modifier ces conditions d'utilisation à tout moment. Les modifications prendront effet dès leur publication sur notre site. Il est de votre responsabilité de consulter régulièrement les conditions.</p>
+                
+                <h6>6. Limitation de Responsabilité</h6>
+                <p>BlogSphere ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation de notre service. Vous utilisez BlogSphere à vos propres risques.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">J'ai compris</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajoute des classes Bootstrap aux champs de formulaire
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.classList.add('form-control');
+            
+            // Gestion spéciale pour les cases à cocher
+            if (element.type === 'checkbox') {
+                element.classList.remove('form-control');
+                element.classList.add('form-check-input');
+            }
+        });
+
+        // Animation pour les champs de formulaire
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('animate__animated', 'animate__pulse');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('animate__animated', 'animate__pulse');
+            });
+        });
+    });
+</script>
+{% endblock %}

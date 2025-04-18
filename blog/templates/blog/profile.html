@@ -1,0 +1,169 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Profil de {{ user.username }} | BlogSphere{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        padding: 3rem 0;
+    }
+    .profile-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .profile-header {
+        background: linear-gradient(135deg, #4e73df 0%, #2e59d9 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        margin-bottom: 1.5rem;
+    }
+    .profile-body {
+        padding: 2rem;
+    }
+    .profile-section {
+        margin-bottom: 2.5rem;
+    }
+    .profile-section-title {
+        color: #2e59d9;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f8f9fc;
+    }
+    .profile-info-item {
+        margin-bottom: 1rem;
+    }
+    .profile-info-label {
+        font-weight: 500;
+        color: #5a5c69;
+    }
+    .profile-info-value {
+        font-weight: 400;
+    }
+    .btn-edit {
+        background: linear-gradient(135deg, #4e73df 0%, #2e59d9 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 89, 217, 0.3);
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        {% if user.profile.image %}
+                            <img src="{{ user.profile.image.url }}" class="profile-avatar" alt="Avatar">
+                        {% else %}
+                            <img src="{% static 'blog/images/default-avatar.png' %}" class="profile-avatar" alt="Avatar">
+                        {% endif %}
+                        <h2>{{ user.username }}</h2>
+                        <p class="mb-0">Membre depuis {{ user.date_joined|date:"F Y" }}</p>
+                    </div>
+                    
+                    <div class="profile-body">
+                        <!-- Section Informations personnelles -->
+                        <div class="profile-section">
+                            <h3 class="profile-section-title">
+                                <i class="fas fa-user-circle me-2"></i>Informations personnelles
+                            </h3>
+                            
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ u_form.first_name|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ u_form.last_name|as_crispy_field }}
+                                    </div>
+                                </div>
+                                
+                                {{ u_form.email|as_crispy_field }}
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Photo de profil</label>
+                                    <div class="d-flex align-items-center">
+                                        {% if user.profile.image %}
+                                            <img src="{{ user.profile.image.url }}" width="80" height="80" class="rounded-circle me-3" alt="Photo de profil actuelle">
+                                        {% endif %}
+                                        {{ p_form.image }}
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    {{ p_form.bio|as_crispy_field }}
+                                </div>
+                                
+                                <div class="text-end mt-4">
+                                    <button type="submit" class="btn btn-edit">
+                                        <i class="fas fa-save me-2"></i>Enregistrer les modifications
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Section Statistiques -->
+                        <div class="profile-section">
+                            <h3 class="profile-section-title">
+                                <i class="fas fa-chart-line me-2"></i>Statistiques
+                            </h3>
+                            <div class="row">
+                                <div class="col-md-4 profile-info-item">
+                                    <div class="profile-info-label">Articles publiés</div>
+                                    <div class="profile-info-value h5">{{ user.post_set.count }}</div>
+                                </div>
+                                <div class="col-md-4 profile-info-item">
+                                    <div class="profile-info-label">Commentaires</div>
+                                    <div class="profile-info-value h5">{{ user.comment_set.count }}</div>
+                                </div>
+                                <div class="col-md-4 profile-info-item">
+                                    <div class="profile-info-label">Membre depuis</div>
+                                    <div class="profile-info-value h5">{{ user.date_joined|date:"d/m/Y" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Section Sécurité -->
+                        <div class="profile-section">
+                            <h3 class="profile-section-title">
+                                <i class="fas fa-shield-alt me-2"></i>Sécurité du compte
+                            </h3>
+                            <a href="{% url 'password_change' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-key me-2"></i>Changer le mot de passe
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
