@@ -72,7 +72,7 @@
         </div>
         <div class="card-body">
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'tag_user' post.id 0 %}">
+                <form method="post" action="{% url 'post-tag-user' post.id  %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="user">Choisissez un utilisateur à taguer :</label>
@@ -129,9 +129,9 @@
     function updateAction(userId) {
         const form = document.querySelector('form[action*="tag_user"]');
         if (userId) {
-            form.action = "{% url 'tag_user' post.id 0 %}".replace('0', userId);
+            form.action = "{% url 'post-tag-user' post.id  %}".replace('0', userId);
         } else {
-            form.action = "{% url 'tag_user' post.id 0 %}";
+            form.action = "{% url 'post-tag-user' post.id  %}";
         }
     }
 </script>

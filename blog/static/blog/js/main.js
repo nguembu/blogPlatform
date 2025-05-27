@@ -1,30 +1,64 @@
-// Fonction pour afficher les messages pendant 5 secondes puis les faire disparaître
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion des messages flash
+    // --- Messages flash ---
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s ease';
             alert.style.opacity = '0';
             setTimeout(() => alert.remove(), 500);
         }, 5000);
     });
 
-    // Animation pour le bouton like
+    // --- Animation + AJAX like ---
     const likeButtons = document.querySelectorAll('.like-btn');
     likeButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Animation
             this.classList.add('animate__animated', 'animate__heartBeat');
             setTimeout(() => {
                 this.classList.remove('animate__animated', 'animate__heartBeat');
             }, 1000);
+
+            // Données
+            const postId = this.getAttribute('data-post-id');
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // Requête AJAX
+            fetch(`/post/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Met à jour le compteur et l’icône
+                const likeCountSpan = this.querySelector('#like-count');
+                if (likeCountSpan) {
+                    likeCountSpan.textContent = data.likes_count;
+                }
+                if (data.liked) {
+                    this.innerHTML = `<i class="fas fa-heart"></i> <span id="like-count">${data.likes_count}</span>`;
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-primary');
+                } else {
+                    this.innerHTML = `<i class="far fa-heart"></i> <span id="like-count">${data.likes_count}</span>`;
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-outline-primary');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     });
 
-    // Fonction pour le chargement dynamique des posts
+    // --- Simulation chargement posts ---
     const loadMoreButton = document.getElementById('load-more');
     if (loadMoreButton) {
         loadMoreButton.addEventListener('click', function() {
-            // Simule le chargement de nouveaux posts
             const newPosts = document.createElement('div');
             newPosts.classList.add('post');
             newPosts.innerHTML = `
@@ -33,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>Contenu du nouveau post...</p>
             `;
             document.querySelector('.posts-container').appendChild(newPosts);
-            this.style.display = 'none'; // Cache le bouton après le chargement
+            this.style.display = 'none';
         });
     }
 
-    // Fonction pour le défilement fluide vers les sections
+    // --- Scroll fluide ---
     const scrollLinks = document.querySelectorAll('a.scroll-to');
     scrollLinks.forEach(link => {
         link.addEventListener('click', function(e) {
