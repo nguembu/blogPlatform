@@ -7,7 +7,12 @@
     <div class="card">
         <div class="card-body">
             <h2 class="card-title">{% if form.instance.pk %}Modifier{% else %}Nouveau{% endif %} Post</h2>
-            <form method="POST" enctype="multipart/form-data">
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+            <form id="post-form" method="POST" enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div class="form-group mt-4">
@@ -22,4 +27,11 @@
             </form>
         </div>
     </div>
+    <script>
+        // Exemple de gestion JS du formulaire
+        document.getElementById('post-form').addEventListener('submit', function(e) {
+            // Ajoutez ici votre logique JS si besoin
+            // e.preventDefault(); // Décommentez si vous gérez l'envoi en AJAX
+        });
+    </script>
 {% endblock %}

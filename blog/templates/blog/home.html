@@ -5,7 +5,7 @@
 
 {% block content %}
     {% for post in posts %}
-        <article class="card mb-4 post-card">
+        <article class="card mb-4 post-card" data-post-id="{{ post.id }}">
             {% if post.image %}
                 <img src="{{ post.image.url }}" class="card-img-top post-image" alt="{{ post.title }}">
             {% endif %}
@@ -21,16 +21,22 @@
                     <div>
                         {% if user.is_authenticated %}
                             {% if user in post.author.followers.all %}
-                                <form method="post" action="{% url 'unfollow' post.author.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-secondary btn-sm">Se désabonner</button>
-                                </form>
-                                <span class="badge bg-success ms-2">Abonné</span> <!-- Indique que l'utilisateur est abonné -->
+                                <button 
+                                    class="btn btn-secondary btn-sm follow-btn" 
+                                    data-action="unfollow"
+                                    data-author-id="{{ post.author.id }}"
+                                    data-url="{% url 'unfollow' post.author.id %}">
+                                    Se désabonner
+                                </button>
+                                <span class="badge bg-success ms-2">Abonné</span>
                             {% else %}
-                                <form method="post" action="{% url 'follow' post.author.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary btn-sm">S'abonner</button>
-                                </form>
+                                <button 
+                                    class="btn btn-primary btn-sm follow-btn" 
+                                    data-action="follow"
+                                    data-author-id="{{ post.author.id }}"
+                                    data-url="{% url 'follow' post.author.id %}">
+                                    S'abonner
+                                </button>
                             {% endif %}
                         {% else %}
                             <a href="{% url 'login' %}" class="btn btn-primary btn-sm">S'abonner</a>

@@ -15,16 +15,22 @@
                     </div>
                     <div>
                         {% if user.is_authenticated %}
-                            {% if user in post.author.followers.all %}
-                                <form method="post" action="{% url 'unfollow' post.author.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-secondary">Se désabonner</button>
-                                </form>
-                            {% else %}
-                                <form method="post" action="{% url 'follow' post.author.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary">S'abonner</button>
-                                </form>
+                            {% if user != post.author %}
+                                {% if user in post.author.followers.all %}
+                                    <button 
+                                        class="btn btn-secondary follow-btn" 
+                                        data-author-id="{{ post.author.id }}" 
+                                        data-action="unfollow">
+                                        Se désabonner
+                                    </button>
+                                {% else %}
+                                    <button 
+                                        class="btn btn-primary follow-btn" 
+                                        data-author-id="{{ post.author.id }}" 
+                                        data-action="follow">
+                                        S'abonner
+                                    </button>
+                                {% endif %}
                             {% endif %}
                         {% else %}
                             <a href="{% url 'login' %}" class="btn btn-primary">S'abonner</a>
@@ -41,4 +47,55 @@
     <div class="d-flex justify-content-center">
         <a href="{% url 'home' %}" class="btn btn-primary">Retour à l'accueil</a>
     </div>
+
+    <script>
+        // Expose CSRF token for AJAX
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        document.querySelectorAll('.follow-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const authorId = this.dataset.authorId;
+                const action = this.dataset.action;
+                fetch(`/{% url 'follow' 0 %}`.replace('0', authorId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({action: action})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        if (action === 'follow') {
+                            this.textContent = 'Se désabonner';
+                            this.classList.remove('btn-primary');
+                            this.classList.add('btn-secondary');
+                            this.dataset.action = 'unfollow';
+                        } else {
+                            this.textContent = "S'abonner";
+                            this.classList.remove('btn-secondary');
+                            this.classList.add('btn-primary');
+                            this.dataset.action = 'follow';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

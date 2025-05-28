@@ -51,7 +51,7 @@
                             <strong>{{ comment.author.username }}</strong>
                             <small class="text-muted">{{ comment.created_date|timesince }} ago</small>
                         </div>
-                        <p>{{ comment|safe }}</p>  <!-- Utilisez 'safe' pour rendre le HTML -->
+                        <p>{{ comment|safe }}</p>
                         {% if comment.author == user or user.is_superuser %}
                             <div>
                                 <a href="#" class="text-danger">Supprimer</a>
@@ -76,7 +76,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="user">Choisissez un utilisateur à taguer :</label>
-                        <select name="user" class="form-control" required onchange="updateAction(this.value)">
+                        <select name="user" class="form-control" required>
                             <option value="">-- Sélectionnez un utilisateur --</option>
                             {% for user in all_users %}
                                 <option value="{{ user.id }}">{{ user.username }}</option>
@@ -90,13 +90,16 @@
             {% endif %}
         </div>
     </section>
+    <!-- CSRF token for JS -->
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
 {% endblock %}
 
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const likeBtn = document.getElementById('like-btn');
-        
+        const csrfToken = document.getElementById('csrf-token').value;
+
         likeBtn.addEventListener('click', function(e) {
             e.preventDefault();
             const postId = this.getAttribute('data-post-id');
@@ -104,7 +107,7 @@
             fetch(`/post/${postId}/like/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-CSRFToken': csrfToken,
                     'Content-Type': 'application/json',
                 },
                 credentials: 'same-origin',
@@ -125,15 +128,5 @@
             .catch(error => console.error('Error:', error));
         });
     });
-
-    function updateAction(userId) {
-        const form = document.querySelector('form[action*="tag_user"]');
-        if (userId) {
-            form.action = "{% url 'post-tag-user' post.id  %}".replace('0', userId);
-        } else {
-            form.action = "{% url 'post-tag-user' post.id  %}";
-        }
-    }
 </script>
 {% endblock %}
-

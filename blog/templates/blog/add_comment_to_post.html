@@ -9,7 +9,7 @@
         <p class="text-muted">Publié par {{ post.author.username }} le {{ post.date_posted|date:"d F Y" }}</p>
 
         <h3>Commentaires</h3>
-        <ul class="list-unstyled">
+        <ul class="list-unstyled" id="comments-list">
             {% for comment in post.comments.all %}
                 <li class="media mb-3">
                     <div class="media-body">
@@ -23,12 +23,46 @@
         </ul>
 
         <h3>Ajouter un Commentaire</h3>
-        <form method="post" action="{% url 'add-comment' post.id %}">
+        <div id="comment-errors" class="alert alert-danger d-none"></div>
+        <form id="comment-form" method="post" action="{% url 'add-comment' post.id %}">
             {% csrf_token %}
             <div class="mb-3">
-                <textarea class="form-control" name="content" rows="3" required placeholder="Écrivez votre commentaire ici..."></textarea>
+                <textarea class="form-control" name="content" id="comment-content" rows="3" required placeholder="Écrivez votre commentaire ici..."></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Commenter</button>
         </form>
     </div>
+    <script>
+    // Exemple JS pour AJAX (optionnel)
+    document.getElementById('comment-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const content = document.getElementById('comment-content').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const errorsDiv = document.getElementById('comment-errors');
+        errorsDiv.classList.add('d-none');
+        errorsDiv.innerText = '';
+
+        const response = await fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({content})
+        });
+        const data = await response.json();
+        if (response.ok) {
+            // Ajoute le commentaire à la liste sans recharger
+            const li = document.createElement('li');
+            li.className = 'media mb-3';
+            li.innerHTML = `<div class="media-body"><h5 class="mt-0 mb-1">${data.author}</h5>${data.content}</div>`;
+            document.getElementById('comments-list').appendChild(li);
+            document.getElementById('comment-content').value = '';
+        } else {
+            errorsDiv.innerText = data.error || 'Erreur lors de l\'envoi du commentaire.';
+            errorsDiv.classList.remove('d-none');
+        }
+    });
+    </script>
 {% endblock %}

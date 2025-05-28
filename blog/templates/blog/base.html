@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Blog Platform - {% block title %}{% endblock %}</title>
+    <title>BlogSphere{% block title %} - Plateforme de Blog{% endblock %}</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Custom CSS -->
@@ -19,39 +19,34 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
+
     <!-- Navigation Bar -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary shadow-sm fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-lg fixed-top py-3 custom-navbar">
             <div class="container">
-                <a class="navbar-brand fw-bold fs-3 d-flex align-items-center" href="{% url 'blog-home' %}">
-                    <i class="fas fa-blog me-2"></i>BlogSphere
+                <a class="navbar-brand fw-bold fs-2 d-flex align-items-center" href="{% url 'blog-home' %}">
+                    <i class="fas fa-pen-nib me-2"></i>BlogSphere
                 </a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto ms-3">
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'blog-home' %}active{% endif %}" href="{% url 'blog-home' %}">
-                                <i class="fas fa-home me-1"></i> Accueil
+                                <i class="fas fa-home me-1"></i>Accueil
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'blog-about' %}active{% endif %}" href="{% url 'blog-about' %}">
-                                <i class="fas fa-info-circle me-1"></i> À propos
+                                <i class="fas fa-info-circle me-1"></i>À propos
                             </a>
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'post-create' %}">
-                                <i class="fas fa-plus-circle me-1"></i> Nouveau Post
+                                <i class="fas fa-plus-circle me-1"></i>Nouveau Post
                             </a>
                         </li>
                         {% endif %}
@@ -59,27 +54,13 @@
                     <ul class="navbar-nav ms-auto">
                         {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a
-                                class="nav-link dropdown-toggle d-flex align-items-center"
-                                href="#"
-                                id="userDropdown"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <img
-                                    src="https://ui-avatars.com/api/?name={{ user.username }}&background=random"
-                                    class="rounded-circle me-2"
-                                    width="32"
-                                    height="32"
-                                    alt="Profile"
-                                />
-                                {{ user.username }}
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=random"
+                                     class="rounded-circle profile-img me-2" width="36" height="36" alt="Profile" />
+                                <span class="fw-semibold">{{ user.username }}</span>
                             </a>
-                            <ul
-                                class="dropdown-menu dropdown-menu-end shadow animate__animated animate__fadeIn"
-                                aria-labelledby="userDropdown"
-                            >
+                            <ul class="dropdown-menu dropdown-menu-end shadow animate__animated animate__fadeIn">
                                 <li>
                                     <a class="dropdown-item" href="{% url 'profile' %}">
                                         <i class="fas fa-user-circle me-2"></i>Profil
@@ -90,9 +71,7 @@
                                         <i class="fas fa-cog me-2"></i>Paramètres
                                     </a>
                                 </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
+                                <li><hr class="dropdown-divider" /></li>
                                 <li>
                                     <a class="dropdown-item" href="{% url 'change-profile' %}">
                                         <i class="fas fa-user-edit me-2"></i>Changer son profil
@@ -108,9 +87,7 @@
                                         <i class="fas fa-question-circle me-2"></i>Aide
                                     </a>
                                 </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
+                                <li><hr class="dropdown-divider" /></li>
                                 <li>
                                     <a class="dropdown-item text-danger" href="{% url 'logout' %}">
                                         <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
@@ -120,13 +97,13 @@
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light me-2" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt me-1"></i> Connexion
+                            <a class="nav-link btn btn-outline-light me-2 px-4" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt me-1"></i>Connexion
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus me-1"></i> Inscription
+                            <a class="nav-link btn btn-primary px-4" href="{% url 'register' %}">
+                                <i class="fas fa-user-plus me-1"></i>Inscription
                             </a>
                         </li>
                         {% endif %}
@@ -138,62 +115,52 @@
 
     <!-- Main Content -->
     <main class="flex-grow-1 mt-5 pt-4">
-        <div class="container my-4">
+        <div class="container my-5">
             <!-- Flash Messages -->
             {% if messages %}
             {% for message in messages %}
-            <div
-                class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeInDown"
-                role="alert"
-            >
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeInDown shadow"
+                 role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
             {% endif %}
 
-            <div class="row g-4">
+            <div class="row g-5">
                 <!-- Main Content Column -->
-                <div class="col-lg-8">{% block content %}{% endblock %}</div>
+                <div class="col-lg-8">
+                    {% block content %}{% endblock %}
+                </div>
 
                 <!-- Sidebar Column -->
                 <div class="col-lg-4">
-                    <div class="sticky-top" style="top: 80px;">
+                    <div class="sticky-top custom-sticky">
                         <!-- About Card -->
-                        <div class="card shadow-sm mb-4 animate__animated animate__fadeInRight">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-info-circle me-2"></i>À propos
-                                </h5>
+                        <div class="card shadow-lg mb-4 animate__animated animate__fadeInRight">
+                            <div class="card-header bg-gradient text-white custom-card-header">
+                                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>À propos</h5>
                             </div>
                             <div class="card-body">
                                 <p class="card-text">
-                                    Bienvenue sur BlogSphere, la plateforme où vos idées prennent vie.
-                                    Partagez vos pensées avec une communauté engagée.
+                                    Bienvenue sur <b>BlogSphere</b>, la plateforme où vos idées prennent vie.<br>
+                                    Partagez vos pensées avec une communauté passionnée et découvrez des articles inspirants chaque jour.
                                 </p>
-                                <a href="{% url 'blog-about' %}" class="btn btn-outline-primary btn-sm">En
-                                    savoir plus</a
-                                >
+                                <a href="{% url 'blog-about' %}" class="btn btn-outline-primary btn-sm">En savoir plus</a>
                             </div>
                         </div>
 
                         <!-- Recent Posts Card -->
-                        <div
-                            class="card shadow-sm animate__animated animate__fadeInRight animate__delay-1s"
-                        >
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-clock me-2"></i>Derniers Articles
-                                </h5>
+                        <div class="card shadow-lg animate__animated animate__fadeInRight animate__delay-1s">
+                            <div class="card-header bg-gradient text-white custom-card-header">
+                                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Derniers Articles</h5>
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
                                     {% for post in recent_posts %}
-                                    <a
-                                        href="{% url 'post-detail' post.pk %}"
-                                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                                    >
-                                        {{ post.title|truncatechars:25 }}
+                                    <a href="{% url 'post-detail' post.pk %}"
+                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                        <span>{{ post.title|truncatechars:30 }}</span>
                                         <span class="badge bg-primary rounded-pill">{{ post.comments.count }}</span>
                                     </a>
                                     {% empty %}
@@ -209,24 +176,24 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-auto">
+    <footer class="footer-bg text-white py-5 mt-auto">
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">BlogSphere</h5>
+                    <h4 class="fw-bold mb-3">BlogSphere</h4>
                     <p>
-                        La plateforme de blogging moderne pour partager vos idées avec le
-                        monde.
+                        La plateforme de blogging moderne pour partager vos idées avec le monde.<br>
+                        Rejoignez-nous et faites entendre votre voix !
                     </p>
-                    <div class="social-icons">
-                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    <div class="social-icons mt-3">
+                        <a href="#" class="text-white me-3 fs-5"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3 fs-5"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3 fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="col-md-2 mb-4 mb-md-0">
-                    <h5>Liens rapides</h5>
+                    <h5 class="mb-3">Liens rapides</h5>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'blog-home' %}" class="text-white-50">Accueil</a></li>
                         <li><a href="{% url 'blog-about' %}" class="text-white-50">À propos</a></li>
@@ -235,8 +202,8 @@
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <h5>Newsletter</h5>
-                    <p>Abonnez-vous pour recevoir les dernières actualités.</p>
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p>Abonnez-vous pour recevoir les dernières actualités et articles inspirants.</p>
                     <form class="row g-2">
                         <div class="col-8">
                             <input type="email" class="form-control" placeholder="Votre email" />
@@ -249,17 +216,13 @@
             </div>
             <hr class="my-4 bg-secondary" />
             <div class="text-center">
-                <p class="mb-0 small">&copy; 2023 BlogSphere. Tous droits réservés.</p>
+                <p class="mb-0 small">&copy; {{ now|date:"Y" }} BlogSphere. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
     <!-- Back to Top Button -->
-    <button
-        type="button"
-        class="btn btn-primary btn-floating btn-lg rounded-circle shadow"
-        id="btn-back-to-top"
-    >
+    <button type="button" class="btn btn-primary btn-floating btn-lg rounded-circle shadow" id="btn-back-to-top">
         <i class="fas fa-arrow-up"></i>
     </button>
 
@@ -272,7 +235,6 @@
     <script>
         // Back to top button
         const backToTopButton = document.getElementById("btn-back-to-top");
-
         window.addEventListener("scroll", () => {
             if (window.pageYOffset > 300) {
                 backToTopButton.classList.add("show");
@@ -280,12 +242,8 @@
                 backToTopButton.classList.remove("show");
             }
         });
-
         backToTopButton.addEventListener("click", () => {
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
         });
     </script>
 </body>

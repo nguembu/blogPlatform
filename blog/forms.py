@@ -3,25 +3,29 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Comment, Profile, Person
 
 # ==============================
-# Formulaire pour les commentaires
+# Formulaire d'enregistrement personnalisé
 # ==============================
 
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ('text',)
-        widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-        }
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['text'].label = "Add a comment"
-        self.fields['text'].widget.attrs.update({
-            'placeholder': 'Write your comment here...',
-            'class': 'form-control',
-            'rows': 3,
-        })
+    class Meta:
+        model = Person
+        fields = ['username', 'email', 'sex', 'profile_picture', 'password1', 'password2']
+
+# ==============================
+# Formulaire de connexion
+# ==============================
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    password = forms.CharField(
+        label="Mot de passe",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
 
 # ==============================
 # Mise à jour du profil utilisateur
@@ -44,23 +48,30 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['image', 'bio']
 
 # ==============================
-# Formulaire d'enregistrement personnalisé
+# Formulaire pour les commentaires
 # ==============================
 
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-
+class CommentForm(forms.ModelForm):
     class Meta:
-        model = Person
-        fields = ['username', 'email', 'sex', 'profile_picture', 'password1', 'password2']
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Write your comment here...'
+            }),
+        }
+        labels = {
+            'text': "Add a comment",
+        }
 
 # ==============================
 # Formulaire pour taguer un utilisateur
 # ==============================
 
 class TagForm(forms.Form):
-    user = forms.ModelChoiceField(queryset=Person.objects.all(), label="Taguer un utilisateur")
-
-class LoginForm(forms.Form):
-    email = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    user = forms.ModelChoiceField(
+        queryset=Person.objects.all(),
+        label="Taguer un utilisateur"
+    )

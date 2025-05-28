@@ -5,16 +5,21 @@ UserModel = get_user_model()
 
 class EmailAuthBackend(ModelBackend):
     """
-    Authentification par email au lieu de username.
+    Authentification par email ou username.
     """
-    def authenticate(self, request, email=None, password=None, **kwargs):
-        if email is None or password is None:
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        # Permettre l'authentification par email ou username
+        if username is None:
+            username = kwargs.get('email')
+        if username is None or password is None:
             return None
         try:
-            user = UserModel.objects.get(email=email)
+            user = UserModel.objects.get(email=username)
         except UserModel.DoesNotExist:
-            return None
-        else:
-            if user.check_password(password) and self.user_can_authenticate(user):
-                return user
+            try:
+                user = UserModel.objects.get(username=username)
+            except UserModel.DoesNotExist:
+                return None
+        if user.check_password(password) and self.user_can_authenticate(user):
+            return user
         return None

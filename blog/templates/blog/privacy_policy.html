@@ -13,5 +13,26 @@
         <p>Votre confidentialité est importante pour nous. Voici comment nous traitons vos données...</p>
         <!-- Ajoutez le contenu de votre politique de confidentialité ici -->
     </div>
+    <!-- Si vous utilisez des formulaires ou AJAX, ajoutez le token CSRF dans vos scripts -->
+    <script>
+        // Exemple pour AJAX avec CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+        // Utilisez csrftoken dans vos requêtes AJAX si besoin
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
