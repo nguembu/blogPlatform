@@ -1,11 +1,80 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}Connexion | BlogSphere{% endblock %}
+
+
 {% block content %}
-<h2>Connexion</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button type="submit" class="btn btn-primary">Se connecter</button>
-</form>
+<div class="login-container">
+    <div class="login-card animate__animated animate__fadeIn">
+        <div class="login-header">
+            <h3><i class="fas fa-sign-in-alt"></i> Connexion à BlogSphere</h3>
+        </div>
+        <div class="login-body">
+            <h4 class="login-title">Bienvenue de retour</h4>
+            
+            <form method="POST" action="{% url 'login' %}" id="login-form" novalidate>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="error-message">{{ form.non_field_errors.0 }}</div>
+                {% endif %}
+                <div class="form-group">
+                    {{ form.email|as_crispy_field }}
+                    {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password|as_crispy_field }}
+                    {% if form.password.errors %}
+                        <div class="error-message">{{ form.password.errors.0 }}</div>
+                    {% endif %}
+                    <a href="{% url 'password_reset' %}" class="password-reset-link">Mot de passe oublié ?</a>
+                </div>
+                <button type="submit" class="btn btn-primary login-btn mb-3">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+                <div class="social-login">
+                    <p class="text-center text-muted mb-3">Ou connectez-vous avec</p>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-btn google-btn">
+                        <i class="fab fa-google"></i> Google
+                    </a>
+                    <a href="{% url 'social:begin' 'facebook' %}" class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i> Facebook
+                    </a>
+                </div>
+            </form>
+            
+            <div class="login-footer">
+                <p class="text-muted mb-0">Pas encore de compte ? 
+                    <a href="{% url 'register' %}" class="text-primary">Créez-en un</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('animate__animated', 'animate__pulse');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('animate__animated', 'animate__pulse');
+            });
+        });
+
+        // Si tu veux gérer la soumission via JS, décommente ci-dessous
+        /*
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            // e.preventDefault();
+            // Ajoute ici ton code AJAX si besoin
+        });
+        */
+    });
+</script>
 {% endblock %}
