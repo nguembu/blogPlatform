@@ -157,15 +157,17 @@
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
-                                    {% for post in recent_posts %}
-                                    <a href="{% url 'post-detail' post.pk %}"
-                                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                        <span>{{ post.title|truncatechars:30 }}</span>
-                                        <span class="badge bg-primary rounded-pill">{{ post.comments.count }}</span>
-                                    </a>
-                                    {% empty %}
-                                    <div class="list-group-item">Aucun article récent.</div>
-                                    {% endfor %}
+                                    {% if recent_posts %}
+                                        {% for post in recent_posts %}
+                                        <a href="{% url 'post-detail' post.pk %}"
+                                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <span>{{ post.title|truncatechars:30 }}</span>
+                                            <span class="badge bg-primary rounded-pill">{{ post.comments.count }}</span>
+                                        </a>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="list-group-item">Aucun article récent.</div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -197,7 +199,7 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'blog-home' %}" class="text-white-50">Accueil</a></li>
                         <li><a href="{% url 'blog-about' %}" class="text-white-50">À propos</a></li>
-                        <li><a href="#" class="text-white-50">Contact</a></li>
+                        <li><a href="{% url 'blog-Contact' %}" class="text-white-50">Contact</a></li>
                         <li><a href="#" class="text-white-50">Mentions légales</a></li>
                     </ul>
                 </div>

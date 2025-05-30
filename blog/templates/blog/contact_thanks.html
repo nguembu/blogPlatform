@@ -1,0 +1,10 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container contact-thanks">
+    <h1>Merci pour votre message&nbsp;!</h1>
+    <p>Nous avons bien reçu votre demande et vous répondrons dans les plus brefs délais.</p>
+    <a class="btn btn-primary" href="{% url 'contact-thanks' %}">Retour à l'accueil</a>
+</div>
+{% endblock %}

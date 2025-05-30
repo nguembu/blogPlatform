@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Contactez-nous</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+{% extends "blog/base.html" %}
+{% load static %}
+{% block title %}Contact | BlogSphere{% endblock %}
+
+{% block content %}
     <h1>Contactez-nous</h1>
     <form method="post">
         {% csrf_token %}
@@ -20,5 +17,4 @@
 
         <button type="submit">Envoyer</button>
     </form>
-</body>
-</html>
+{% endblock %}

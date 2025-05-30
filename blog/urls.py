@@ -34,7 +34,15 @@ urlpatterns = [
     path('change-profile/', change_profile, name='change-profile'),
     path('parametre/', parametre, name='parametre'),
     path('delete-account/', delete_account, name='delete-accounts'),
-
+    path('contact/', views.contact, name='blog-Contact'),
+    path('contact/success/', contact_success, name='contact-success'),
+    path('contact/failure/', contact_failure, name='contact-failure'),
+    path('contact/thanks/', contact_thanks, name='contact-thanks'),
+    path('contact/thanks/<str:email>/', contact_thanks, name='contact-thanks-email'),
+    path('contact/thanks/<str:email>/<str:message>/', contact_thanks, name='contact-thanks-email-message'),
+    path('contact/thanks/<str:email>/<str:message>/<str:subject>/', contact_thanks, name='contact-thanks-email-message-subject'),
+    path('contact/thanks/<str:email>/<str:message>/<str:subject>/<str:status>/', contact_thanks, name='contact-thanks-email-message-subject-status'),
+    path('add-comment/', views.add_comment, name='add-comment'),
 
     # Auth
     path('login/', views.login_view, name='login'),  # vue personnalisée

@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Échec de l'envoi du message</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Échec de l'envoi du message</h1>
+        <p>Nous sommes désolés, votre message n'a pas pu être envoyé. Veuillez réessayer plus tard.</p>
+        <a href="{% url 'contact-failure' %}" class="btn">Retour au formulaire de contact</a>
+    </div>
+</body>
+</html>

@@ -280,3 +280,37 @@ def delete_account(request):
          messages.success(request, "Votre compte a été supprimé avec succès.")
          return redirect('blog-home')
     return render(request, 'blog/delete_account_confirm.html')
+
+def contact_thanks(request, email, message, subject=None, status=None):
+    context = {
+        'email': email,
+        'message': message,
+        'subject': subject,
+        'status': status,
+    }
+    return render(request, 'blog/contact_thanks.html', context)
+
+def contact_success(request):
+    return render(request, 'blog/contact_success.html', {'title': 'Contact - Succès'})
+
+def contact_failure(request):
+    return render(request, 'blog/contact_failure.html', {'title': 'Contact - Échec'})
+
+@login_required
+def add_comment(request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        if request.user == post.author:
+            messages.warning(request, "Vous ne pouvez pas commenter votre propre post.")
+            return redirect('post-detail', pk=post_id)
+        if request.method == "POST":
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                messages.success(request, "Commentaire ajouté avec succès.")
+                return redirect('post-detail', pk=post_id)
+        else:
+            form = CommentForm()
+        return render(request, 'blog/add_comment_to_post.html', {'form': form, 'post': post})
