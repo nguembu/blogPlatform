@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Foire Aux Questions (FAQ)</h1>
+    <div class="faq-list">
+        {% if faq_list %}
+            <ul>
+                {% for faq in faq_list %}
+                    <li>
+                        <strong>{{ faq.question }}</strong>
+                        <p>{{ faq.answer }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucune question fréquemment posée pour le moment.</p>
+        {% endif %}
+    </div>
+{% endblock %}

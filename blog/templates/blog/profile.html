@@ -5,12 +5,25 @@
 {% block title %}Profil de {{ user.username }} | BlogSphere{% endblock %}
 
 {% block extra_css %}
-<style>
-/* ... (garde ton CSS existant) ... */
-</style>
+
 {% endblock %}
 
 {% block content %}
+<style>
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+button:hover, button:focus {
+    background-color: #0056b3;
+}
+</style>
 <div class="profile-container">
     <div class="container">
         <div class="row justify-content-center">
@@ -54,18 +67,35 @@
                                     {{ p_form.bio|as_crispy_field }}
                                 </div>
                                 <div class="text-end mt-4">
-                                    <button type="submit" class="btn btn-edit">
+                                    <button type="submit" class="btn btn-edit custom-save-btn">
                                         <i class="fas fa-save me-2"></i>Enregistrer les modifications
                                     </button>
                                 </div>
+                                <style>
+                                    .custom-save-btn {
+                                        background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+                                        color: #fff;
+                                        border: none;
+                                        border-radius: 6px;
+                                        padding: 0.6rem 2rem;
+                                        font-weight: 600;
+                                        box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+                                        transition: background 0.2s, box-shadow 0.2s;
+                                    }
+                                    .custom-save-btn:hover, .custom-save-btn:focus {
+                                        background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+                                        box-shadow: 0 4px 16px rgba(0,86,179,0.12);
+                                    }
+                                </style>
                             </form>
                         </div>
+                        
                         <!-- Section Statistiques -->
                         <div class="profile-section">
                             <h3 class="profile-section-title">
                                 <i class="fas fa-chart-line me-2"></i>Statistiques
                             </h3>
-                            <div class="row">
+                            <div class="row profile-stats-row">
                                 <div class="col-md-4 profile-info-item">
                                     <div class="profile-info-label">Articles publiés</div>
                                     <div class="profile-info-value h5">{{ user.post_set.count }}</div>
@@ -79,6 +109,39 @@
                                     <div class="profile-info-value h5">{{ user.date_joined|date:"d/m/Y" }}</div>
                                 </div>
                             </div>
+                            <style>
+                                .profile-stats-row {
+                                    margin-top: 1.5rem;
+                                    margin-bottom: 1rem;
+                                }
+                                .profile-info-item {
+                                    background:rgb(246, 248, 250);
+                                    border-radius: 10px;
+                                    box-shadow: 0 2px 8px rgba(202, 199, 199, 0.04);
+                                    padding: 1.2rem 0.5rem;
+                                    margin-bottom: 1rem;
+                                    text-align: center;
+                                    transition: box-shadow 0.2s;
+                                }
+                                .profile-info-item:hover {
+                                    box-shadow: 0 4px 16px rgba(182, 240, 240, 0.1);
+                                }
+                                .profile-info-label {
+                                    font-size: 1rem;
+                                    color: #6c757d;
+                                    margin-bottom: 0.4rem;
+                                }
+                                .profile-info-value {
+                                    font-size: 1.7rem;
+                                    color:rgb(104, 212, 146);
+                                    font-weight: 700;
+                                }
+                                @media (max-width: 767px) {
+                                    .profile-info-item {
+                                        margin-bottom: 1.2rem;
+                                    }
+                                }
+                            </style>
                         </div>
                         <!-- Section Sécurité -->
                         <div class="profile-section">

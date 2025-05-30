@@ -4,7 +4,7 @@
 
 {% block content %}
     <h1 class="mb-4">Articles de {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1>
-    
+
     {% for post in posts %}
         <article class="card mb-4">
             <div class="card-body">
@@ -40,9 +40,14 @@
                 <h2 class="card-title"><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
                 <p>{{ post.content|truncatechars:300 }}</p>
             </div>
+            {% if post.image %}
+                <div class="card-footer text-center">
+                    <img src="{{ post.image.url }}" alt="Photo de l'article" class="img-fluid mt-2"/>
+                </div>
+            {% endif %}
         </article>
     {% endfor %}
-    
+
     {% include 'blog/pagination.html' %}
     <div class="d-flex justify-content-center">
         <a href="{% url 'home' %}" class="btn btn-primary">Retour à l'accueil</a>

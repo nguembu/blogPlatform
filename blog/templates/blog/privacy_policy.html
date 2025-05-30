@@ -1,21 +1,42 @@
+{% extends "blog/base.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Politique de Confidentialité - BlogSphere</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% block content %}
 <body>
-    <div class="container mt-5 pt-4">
-        <h1>Politique de Confidentialité</h1>
-        <p>Votre confidentialité est importante pour nous. Voici comment nous traitons vos données...</p>
-        <!-- Ajoutez le contenu de votre politique de confidentialité ici -->
+    <div class="privacy-card">
+        <h1 class="privacy-title">Politique de Confidentialité</h1>
+        <p>
+            Chez <strong>BlogSphere</strong>, nous accordons une grande importance à la confidentialité de vos données personnelles. Cette politique explique quelles informations nous collectons, comment nous les utilisons et quels sont vos droits.
+        </p>
+        <div class="privacy-section-title">1. Collecte des informations</div>
+        <ul class="privacy-list">
+            <li>Informations fournies lors de l'inscription (nom, email, etc.).</li>
+            <li>Données de navigation (adresse IP, navigateur, pages visitées).</li>
+            <li>Contenus publiés ou commentés sur la plateforme.</li>
+        </ul>
+        <div class="privacy-section-title">2. Utilisation des données</div>
+        <ul class="privacy-list">
+            <li>Améliorer l'expérience utilisateur et la sécurité du site.</li>
+            <li>Envoyer des notifications ou des newsletters (avec votre consentement).</li>
+            <li>Analyser l'audience et les performances du site.</li>
+        </ul>
+        <div class="privacy-section-title">3. Partage des informations</div>
+        <ul class="privacy-list">
+            <li>Nous ne partageons jamais vos données personnelles avec des tiers sans votre consentement, sauf obligation légale.</li>
+        </ul>
+        <div class="privacy-section-title">4. Sécurité</div>
+        <ul class="privacy-list">
+            <li>Vos données sont protégées par des mesures de sécurité techniques et organisationnelles.</li>
+        </ul>
+        <div class="privacy-section-title">5. Vos droits</div>
+        <ul class="privacy-list">
+            <li>Accéder, corriger ou supprimer vos données personnelles.</li>
+            <li>Retirer votre consentement à tout moment.</li>
+            <li>Nous contacter pour toute question relative à la confidentialité : <a href="mailto:contact@blogsphere.com">contact@blogsphere.com</a></li>
+        </ul>
     </div>
-    <!-- Si vous utilisez des formulaires ou AJAX, ajoutez le token CSRF dans vos scripts -->
     <script>
-        // Exemple pour AJAX avec CSRF
+        // CSRF token pour AJAX
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -31,8 +52,8 @@
             return cookieValue;
         }
         const csrftoken = getCookie('csrftoken');
-        // Utilisez csrftoken dans vos requêtes AJAX si besoin
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+{% endblock %}

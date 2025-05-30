@@ -104,12 +104,16 @@ def add_comment_to_post(request, pk):
 @login_required
 def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)
-        messages.info(request, "Vous avez retiré votre like.")
+    # Seuls les utilisateurs autres que l'auteur du post peuvent liker
+    if request.user != post.author:
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+            messages.info(request, "Vous avez retiré votre like.")
+        else:
+            post.likes.add(request.user)
+            messages.success(request, "Vous avez aimé ce post.")
     else:
-        post.likes.add(request.user)
-        messages.success(request, "Vous avez aimé ce post.")
+        messages.warning(request, "Vous ne pouvez pas liker votre propre post.")
     return redirect('post-detail', pk=pk)
 
 @login_required
@@ -229,6 +233,50 @@ def change_profile(request):
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'À propos'})
+def privacy_policy(request):
+        return render(request, 'blog/privacy_policy.html')
+def terms_of_service(request):
+        return render(request, 'blog/terms_of_service.html')
 
-class PrivacyPolicyView(TemplateView):
-    template_name = 'blog/privacy_policy.html'
+def contact(request):
+        return render(request, 'blog/contact.html', {'title': 'Contact'})
+
+def help_view(request):
+        return render(request, 'blog/help.html', {'title': 'Aide'})
+
+def faq(request):
+        return render(request, 'blog/faq.html', {'title': 'FAQ'})
+
+
+@login_required
+def parametre(request):
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        messages.warning(request, "Votre profil n'existe pas. Veuillez le créer.")
+        return redirect('register')
+
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, 'Paramètres mis à jour avec succès !')
+            return redirect('parametre')
+        else:
+            messages.error(request, "Erreur lors de la mise à jour des paramètres.")
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=profile)
+
+    return render(request, 'blog/parametre.html', {'u_form': u_form, 'p_form': p_form})
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+         user = request.user
+         user.delete()
+         messages.success(request, "Votre compte a été supprimé avec succès.")
+         return redirect('blog-home')
+    return render(request, 'blog/delete_account_confirm.html')

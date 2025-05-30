@@ -1,0 +1,56 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Paramètres du Compte</h2>
+    <hr>
+    <form method="post" enctype="multipart/form-data" action="{% url 'parametre' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Nom d'utilisateur</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Adresse Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+        </div>
+        <div class="mb-3">
+            <label for="profile_pic" class="form-label">Photo de profil</label>
+            <input type="file" class="form-control" id="profile_pic" name="profile_pic">
+            {% if user.profile.profile_pic %}
+                <img src="{{ user.profile.profile_pic.url }}" alt="Photo de profil" class="img-thumbnail mt-2" width="100">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <textarea class="form-control" id="bio" name="bio" rows="3">{{ user.profile.bio }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Nouveau mot de passe</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">Confirmer le mot de passe</label>
+            <input type="password" class="form-control" id="password2" name="password2">
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    </form>
+    <hr>
+    <h4>Paramètres de confidentialité</h4>
+    <form method="post" action="{% url 'privacy-policy' %}">
+        {% csrf_token %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" id="private_account" name="private_account" {% if user.profile.private_account %}checked{% endif %}>
+            <label class="form-check-label" for="private_account">
+                Rendre mon compte privé
+            </label>
+        </div>
+        <button type="submit" class="btn btn-secondary mt-2">Mettre à jour la confidentialité</button>
+    </form>
+    <hr>
+    <h4>Supprimer le compte</h4>
+    <form method="post" action="{% url 'delete-accounts' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')">Supprimer mon compte</button>
+    </form>
+</div>
+{% endblock %}
