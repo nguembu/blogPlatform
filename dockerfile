@@ -1,5 +1,5 @@
 # Utilise une image officielle Python comme image de base
-FROM python:3.12-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 # Définit le répertoire de travail dans le conteneur
 WORKDIR /app
