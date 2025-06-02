@@ -2,16 +2,29 @@ version: '3.8'
 
 services:
   web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    image: your-dockerhub-username/your-app:latest
+    command: gunicorn BlogPlatform.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - .:/code
       - static_volume:/code/static
       - media_volume:/code/media
+      - ./db.sqlite3:/code/db.sqlite3  # Montez le fichier SQLite
     ports:
       - "8000:8000"
     environment:
-      - DEBUG=1
+      - DEBUG=0
+      - ALLOWED_HOSTS=yourdomain.com
+      - SECRET_KEY=${SECRET_KEY}
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/code/static
+      - media_volume:/code/media
+    depends_on:
+      - web
 
 volumes:
   static_volume:
