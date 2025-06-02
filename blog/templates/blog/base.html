@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BlogSphere{% block title %} - Plateforme de Blog{% endblock %}</title>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
@@ -161,7 +163,7 @@
                                         {% for post in recent_posts %}
                                         <a href="{% url 'post-detail' post.pk %}"
                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                            <span>{{ post.title|truncatechars:30 }}</span>
+                                            <span>{{ post.title|truncatechars:5 }}</span>
                                             <span class="badge bg-primary rounded-pill">{{ post.comments.count }}</span>
                                         </a>
                                         {% endfor %}
