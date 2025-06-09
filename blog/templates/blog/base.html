@@ -58,8 +58,13 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=random"
-                                     class="rounded-circle profile-img me-2" width="36" height="36" alt="Profile" />
+                                {% if user.profile.image %}
+                                    <img src="{{ user.profile.image.url }}"
+                                         class="rounded-circle profile-img me-2" width="36" height="36" alt="Profile" />
+                                {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=random"
+                                         class="rounded-circle profile-img me-2" width="36" height="36" alt="Profile" />
+                                {% endif %}
                                 <span class="fw-semibold">{{ user.username }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow animate__animated animate__fadeIn">
