@@ -7,7 +7,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --- Security ---
 SECRET_KEY = 'django-insecure-n()o+pugahc4y_0wrcg1txgx(6j)@6b4cpovl+u!oou$^*itx0'
 DEBUG = True
-ALLOWED_HOSTS = []
+# --- Hosts autorisés ---
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 
 # --- Custom User model ---
 AUTH_USER_MODEL = 'blog.Person'
