@@ -51,4 +51,5 @@ urlpatterns = [
     path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete-comment'),
     path('check-login-status/', views.check_login_status, name='check-login-status'),
     path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter-subscribe'),
+    path('social/complete/<str:backend>/', views.social_auth_complete, name='social-auth-complete'),
 ]

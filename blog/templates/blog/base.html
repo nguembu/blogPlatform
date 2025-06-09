@@ -160,20 +160,22 @@
                         <!-- Recent Posts Card -->
                         <div class="card shadow-lg animate__animated animate__fadeInRight animate__delay-1s">
                             <div class="card-header bg-gradient text-white custom-card-header">
-                                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Derniers Articles</h5>
+                                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Vos Articles Récents</h5>
                             </div>
                             <div class="card-body p-0">
                                 <div class="list-group list-group-flush">
-                                    {% if recent_posts %}
-                                        {% for post in recent_posts %}
+                                    {% if user.is_authenticated and user_recent_posts %}
+                                        {% for post in user_recent_posts %}
                                         <a href="{% url 'post-detail' post.pk %}"
                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                             <span>{{ post.title|truncatechars:5 }}</span>
                                             <span class="badge bg-primary rounded-pill">{{ post.comments.count }}</span>
                                         </a>
                                         {% endfor %}
+                                    {% elif user.is_authenticated %}
+                                        <div class="list-group-item">Vous n'avez pas encore publié d'article.</div>
                                     {% else %}
-                                        <div class="list-group-item">Aucun article récent.</div>
+                                        <div class="list-group-item">Connectez-vous pour voir vos articles récents.</div>
                                     {% endif %}
                                 </div>
                             </div>

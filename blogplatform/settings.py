@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+from decouple import config
+
 
 # --- Base directory ---
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
+    'social_django',
 ]
 
 SITE_ID = 1
@@ -47,6 +50,9 @@ AUTHENTICATION_BACKENDS = [
     'accounts.auth_backend.EmailAuthBackend',  # Backend personnalisé
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
@@ -127,3 +133,31 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # --- Email Backend pour tests (console) ---
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Configuration des clés (remplace avec les tiennes)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'TON_CLIENT_ID_GOOGLE'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'TON_SECRET_GOOGLE'
+
+SOCIAL_AUTH_FACEBOOK_KEY = 'TON_APP_ID_FACEBOOK'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'TON_APP_SECRET_FACEBOOK'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        }
+    },
+    'facebook': {
+        'APP': {
+            'client_id': config('FACEBOOK_CLIENT_ID'),
+            'secret': config('FACEBOOK_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}

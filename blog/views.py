@@ -14,6 +14,9 @@ from .forms import CommentForm, UserUpdateForm, ProfileUpdateForm, RegisterForm,
 from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.conf import settings
+from django.shortcuts import redirect
+from django.contrib.auth import login as auth_login
+from social_django.utils import psa
 
 # --- List & Detail Views ---
 
@@ -355,3 +358,17 @@ def newsletter_subscribe(request):
             )
             messages.success(request, "Inscription à la newsletter réussie !")
             return redirect(request.META.get('HTTP_REFERER', 'blog-home'))
+        
+        
+@psa('social:complete')
+def social_auth_complete(request, backend):
+            # Cette vue est appelée après le retour du provider OAuth
+            # L'utilisateur est déjà authentifié par python-social-auth
+            user = request.user
+            if user.is_authenticated:
+                auth_login(request, user)
+                messages.success(request, f"Connexion réussie avec {backend.capitalize()} !")
+                return redirect('blog-home')
+            else:
+                messages.error(request, "Erreur lors de la connexion avec le réseau social.")
+                return redirect('login_view')

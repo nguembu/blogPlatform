@@ -1,6 +1,7 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Inscription | BlogSphere{% endblock %}
 
@@ -181,11 +182,14 @@
                             </button>
                             
                             <div class="social-auth">
-                                <p class="text-center text-muted mb-3">Ou inscrivez-vous avec</p>
-                                <a href="#" class="social-btn google-btn" tabindex="-1" aria-disabled="true">
+                              <p class="text-center text-muted mb-3">Ou inscrivez-vous avec</p>
+                                {% load socialaccount %}
+                                <a href="{% provider_login_url 'google' %}" class="social-btn google-btn">
                                     <i class="fab fa-google"></i> Google
                                 </a>
-                                <a href="#" class="social-btn facebook-btn" tabindex="-1" aria-disabled="true">
+
+                              <a href="{% provider_login_url 'facebook' %}" class="social-btn facebook-btn">
+
                                     <i class="fab fa-facebook-f"></i> Facebook
                                 </a>
                             </div>

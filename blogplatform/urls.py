@@ -17,6 +17,7 @@ urlpatterns = [
     # Authentification sociale avec django-allauth
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    
 ]
 
 if settings.DEBUG:
