@@ -303,25 +303,50 @@ def contact_success(request):
 def contact_failure(request):
     return render(request, 'blog/contact_failure.html', {'title': 'Contact - Échec'})
 
+
 @login_required
 def add_comment(request, post_id):
-        post = get_object_or_404(Post, id=post_id)
-        if request.user == post.author:
-            messages.warning(request, "Vous ne pouvez pas commenter votre propre post.")
-            return redirect('post-detail', pk=post_id)
-        if request.method == "POST":
-            form = CommentForm(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.post = post
-                comment.author = request.user
-                comment.save()
-                messages.success(request, "Commentaire ajouté avec succès.")
-                return redirect('post-detail', pk=post_id)
-        else:
-            form = CommentForm()
-        return render(request, 'blog/add_comment_to_post.html', {'form': form, 'post': post})
+    post = get_object_or_404(Post, id=post_id)
 
+    if request.user == post.author:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'error': "Vous ne pouvez pas commenter votre propre post."}, status=403)
+        messages.warning(request, "Vous ne pouvez pas commenter votre propre post.")
+        return redirect('post-detail', pk=post_id)
+
+    if request.method == "POST":
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            try:
+                data = json.loads(request.body)
+                content = data.get('content', '').strip()
+                if not content:
+                    return JsonResponse({'error': "Le commentaire ne peut pas être vide."}, status=400)
+
+                comment = Comment.objects.create(
+                    post=post,
+                    author=request.user,
+                    content=content
+                )
+                return JsonResponse({
+                    'author': comment.author.username,
+                    'content': comment.content
+                })
+            except json.JSONDecodeError:
+                return JsonResponse({'error': "Format JSON invalide."}, status=400)
+
+        # Formulaire HTML classique
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            messages.success(request, "Commentaire ajouté avec succès.")
+            return redirect('post-detail', pk=post_id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'blog/add_comment_to_post.html', {'form': form, 'post': post})
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)

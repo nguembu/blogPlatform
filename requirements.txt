@@ -23,3 +23,4 @@ typing_extensions==4.13.2
 urllib3==2.4.0
 whitenoise
 social-auth-app-django
+python-decouple
