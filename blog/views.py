@@ -7,9 +7,13 @@ from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 )
 from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse
 
 from .models import Post, Tag, Comment, Person, Follow, Profile
 from .forms import CommentForm, UserUpdateForm, ProfileUpdateForm, RegisterForm, LoginForm
+from django.views.decorators.http import require_POST
+from django.core.mail import send_mail
+from django.conf import settings
 
 # --- List & Detail Views ---
 
@@ -314,3 +318,40 @@ def add_comment(request, post_id):
         else:
             form = CommentForm()
         return render(request, 'blog/add_comment_to_post.html', {'form': form, 'post': post})
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user == comment.author or request.user.is_superuser:
+        post_id = comment.post.id
+        comment.delete()
+        messages.success(request, "Commentaire supprimé avec succès.")
+    else:
+        messages.error(request, "Vous n'êtes pas autorisé à supprimer ce commentaire.")
+    return redirect('post-detail', pk=post_id)
+
+@login_required
+def check_login_status(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'is_authenticated': True, 'user': request.user.email})
+    else:
+        return JsonResponse({'is_authenticated': False})
+
+@require_POST
+def newsletter_subscribe(request):
+            email = request.POST.get('email')
+            if not email:
+                messages.error(request, "Veuillez fournir une adresse email.")
+                return redirect(request.META.get('HTTP_REFERER', 'blog-home'))
+            # Ici, vous pouvez ajouter la logique pour enregistrer l'email dans votre modèle Newsletter si besoin
+            # Exemple: Newsletter.objects.get_or_create(email=email)
+            # Envoi d'un email de confirmation (optionnel)
+            send_mail(
+                subject="Inscription à la newsletter",
+                message="Merci de vous être inscrit à notre newsletter !",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=True,
+            )
+            messages.success(request, "Inscription à la newsletter réussie !")
+            return redirect(request.META.get('HTTP_REFERER', 'blog-home'))

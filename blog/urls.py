@@ -48,4 +48,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),  # vue personnalisée
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),
+    path('comment/<int:comment_id>/delete/', views.delete_comment, name='delete-comment'),
+    path('check-login-status/', views.check_login_status, name='check-login-status'),
+    path('newsletter/subscribe/', views.newsletter_subscribe, name='newsletter-subscribe'),
 ]
