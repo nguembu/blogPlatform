@@ -6,15 +6,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Security ---
 SECRET_KEY = 'django-insecure-n()o+pugahc4y_0wrcg1txgx(6j)@6b4cpovl+u!oou$^*itx0'
-DEBUG = True
-# --- Hosts autorisés ---
+DEBUG = os.environ.get('DEBUG', '') != 'False'  # Mieux pour Render
 
+# --- Hosts autorisés ---
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
 
 # --- Custom User model ---
 AUTH_USER_MODEL = 'blog.Person'
@@ -27,16 +26,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
 
-    # App locale
     'blog.apps.BlogConfig',
 
-    # Formulaires
     'crispy_forms',
     'crispy_bootstrap5',
 
-    # Authentification avec allauth
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -45,23 +40,23 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
 ]
 
-# --- Site ID requis par django-allauth ---
 SITE_ID = 1
 
 # --- Authentification ---
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
+    'accounts.auth_backend.EmailAuthBackend',  # Backend personnalisé
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-)
+]
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
-
 LOGIN_REDIRECT_URL = 'blog-home'
 LOGOUT_REDIRECT_URL = 'blog-home'
 
 # --- Middleware ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Ajouté ici
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,6 +74,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -87,10 +83,8 @@ TEMPLATES = [
     },
 ]
 
-# --- URL principale ---
+# --- URL et WSGI ---
 ROOT_URLCONF = 'blogplatform.urls'
-
-# --- WSGI ---
 WSGI_APPLICATION = 'blogplatform.wsgi.application'
 
 # --- Base de données ---
@@ -101,7 +95,7 @@ DATABASES = {
     }
 }
 
-# --- Validation des mots de passe ---
+# --- Password validation ---
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -115,26 +109,21 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# --- Fichiers statiques et médias ---
-STATIC_URL = 'static/'
+# --- Static files ---
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ Obligatoire pour collectstatic
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # ✅ Pour servir les fichiers avec cache busting
+
+# --- Media files (si tu en utilises) ---
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # --- Clé par défaut pour les modèles ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- Configuration Crispy Forms ---
+# --- Crispy Forms ---
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-
-AUTHENTICATION_BACKENDS = [
-    'accounts.auth_backend.EmailAuthBackend',  # Ton backend personnalisé
-    'django.contrib.auth.backends.ModelBackend',  # Le backend par défaut (username)
-]
-
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-# Optionnel, pour email, configurer backend email pour que reset fonctionne
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Pour développement, affiche les mails dans la console
+# --- Email Backend pour tests (console) ---
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
