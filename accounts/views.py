@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.http import JsonResponse
 from .forms import EmailLoginForm
+# Optionnel : une vue pour vérifier l'état de connexion (utile côté JS)
+from django.contrib.auth.decorators import login_required
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -29,10 +32,8 @@ def login_view(request):
             messages.error(request, error_msg)
     else:
         form = EmailLoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'blog/login.html', {'form': form})
 
-# Optionnel : une vue pour vérifier l'état de connexion (utile côté JS)
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def check_login_status(request):

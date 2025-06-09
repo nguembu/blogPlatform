@@ -48,9 +48,9 @@
         </article>
     {% endfor %}
 
-    {% include 'blog/pagination.html' %}
+    {% include 'blog/paginator.html' %}
     <div class="d-flex justify-content-center">
-        <a href="{% url 'home' %}" class="btn btn-primary">Retour à l'accueil</a>
+        <a href="{% url 'blog-home' %}" class="btn btn-primary">Retour à l'accueil</a>
     </div>
 
     <script>
