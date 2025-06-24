@@ -29,7 +29,7 @@ BlogPlatform est une application web de blogging développée avec **Django**. E
 ### 1. Cloner le projet
 
 bash
-git clone https://github.com/ton-utilisateur/blogplatform.git
+git clone https://github.com/nguembu/blogplatform.git
 cd blogplatform```
 
 ### 2. Créer un environnement virtuel (recommandé)
