@@ -2,6 +2,8 @@
 
 BlogPlatform est une application web de blogging développée avec **Django**. Elle permet aux utilisateurs de créer, modifier et supprimer des articles, ainsi que de consulter des publications. Le projet est conteneurisé avec Docker pour faciliter le déploiement.
 
+Note: Cliquez sur ce lien pour accéder a l'application:  https://blogplatform-qcbo.onrender.com/
+
 ## 🚀 Fonctionnalités
 
 - ✏️ Création et édition d’articles de blog
