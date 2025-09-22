@@ -42,7 +42,7 @@ class Person(AbstractBaseUser, PermissionsMixin):
         ('F', 'Feminine'),
     )
 
-    username = models.CharField(max_length=150, unique=True)  # unique ajouté pour éviter doublons
+    username = models.CharField(max_length=150, unique=False)  # unique ajouté pour éviter doublons
     email = models.EmailField(unique=True)
     sex = models.CharField(max_length=1, choices=SEX_TYPES, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True, default='default.jpg')

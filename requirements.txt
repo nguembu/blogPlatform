@@ -24,3 +24,4 @@ urllib3==2.4.0
 whitenoise
 social-auth-app-django
 python-decouple
+selenium

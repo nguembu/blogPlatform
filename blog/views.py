@@ -17,6 +17,7 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth import login as auth_login
 from social_django.utils import psa
+import json
 
 # --- List & Detail Views ---
 

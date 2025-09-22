@@ -7,7 +7,7 @@ services:
     volumes:
       - static_volume:/code/static
       - media_volume:/code/media
-      - ./db.sqlite3:/code/db.sqlite3  # Montez le fichier SQLite
+      - ./db.sqlite3:/code/db.sqlite3  # Monte le fichier SQLite
     ports:
       - "8000:8000"
     environment:
